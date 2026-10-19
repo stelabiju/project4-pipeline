@@ -5,24 +5,21 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Dependencies needed to build the MySQL Python driver
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     pkg-config \
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies first
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create non-root user (fixes Trivy DS-0002)
-RUN addgroup --system app && adduser --system --ingroup app app
+RUN groupadd --gid 10001 app \
+    && useradd --uid 10001 --gid 10001 --create-home app
 
-# Copy application source with correct ownership
-COPY --chown=app:app . .
+COPY --chown=10001:10001 . .
 
-USER app
+USER 10001:10001
 
 EXPOSE 8000
 
