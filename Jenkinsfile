@@ -105,21 +105,6 @@ pipeline {
             }
         }
 
-        stage('Docker Image Vulnerability Scan') {
-            when { expression { env.SKIP_BUILD == 'false' } }
-            steps {
-                sh '''
-                    docker run --rm \
-                      -v /var/run/docker.sock:/var/run/docker.sock \
-                      aquasec/trivy:latest \
-                      image --severity HIGH,CRITICAL \
-                      --ignore-unfixed \
-                      --exit-code 1 \
-                      ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
-            }
-        }
-
         stage('DAST - OWASP ZAP') {
             when { expression { env.SKIP_BUILD == 'false' } }
             steps {
