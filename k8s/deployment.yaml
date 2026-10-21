@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: web
-          image: stelabiju/project4-devsecops:latest
+          image: stelabiju/project4-devsecops:10
           ports:
             - containerPort: 8000
           securityContext:
